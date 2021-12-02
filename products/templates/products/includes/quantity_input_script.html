@@ -1,0 +1,49 @@
+<script type="text/javascript">
+    function handleEnableDisable(itemId) {
+        var currentValue = parseInt($(`#id_qty_${itemId}`).val());
+        var minusDisabled = currentValue < 2;
+        var plusDisabled = currentValue > 98;
+        $(`#decrement-qty_${itemId}`).prop('disabled', minusDisabled);
+        $(`#increment-qty_${itemId}`).prop('disabled', plusDisabled);
+    }
+    // ensure proper enabling/disabling of all inputs on page load
+    var allQtyInputs = $('.qty_input');
+    for(var i = 0; i < allQtyInputs.length; i++){
+        var itemId = $(allQtyInputs[i]).data('item_id');
+        handleEnableDisable(itemId)
+    }
+
+    // check enable/disable every time the input is changed
+    $('.qty_input').change(function() {
+        var itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    })
+    // increment qty
+    $('.increment-qty').click(function(e) {
+        e.preventDefault();
+        // closest method searches up the DOM and the find searches down
+        // from the btn element go up the tree in the input-group class
+        // then drill down to find the first element with the class qty-input
+        var closestInput = $(this).closest('.input-group').find('.qty_input')[0];
+        // cache the value
+        var currentValue = parseInt($(closestInput).val());
+        $(closestInput).val(currentValue + 1);
+        // get the value from the data attribute and pass it on to the function above
+        var itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    })
+    // decrement qty
+    $('.decrement-qty').click(function(e) {
+        // increment qty
+        e.preventDefault();
+        // closest method searches up the DOM and the find searches down
+        // from the btn element go up the tree in the input-group class
+        // then drill down to find the first element with the class qty-input
+        var closestInput = $(this).closest('.input-group').find('.qty_input')[0];
+        // cache the value
+        var currentValue = parseInt($(closestInput).val());
+        $(closestInput).val(currentValue - 1);
+        var itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    })
+</script>
